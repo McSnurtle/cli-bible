@@ -2,7 +2,7 @@
 import curses
 import curses.textpad
 
-from typing import Any
+from typing import (Any, Union)
 
 # ===== Constants =====
 HORIZONTAL: int = 0
@@ -156,7 +156,7 @@ class Screen:
 
                 window.resize(win_height, win_width)
 
-    def focus_next(self, index: int | None = None) -> None:
+    def focus_next(self, index: Union[int, None] = None) -> None:
         """Focus the next registered widget in order of registry.
 
         Params:
