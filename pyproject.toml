@@ -29,4 +29,4 @@ where = ["src"]
 
 [project.scripts]
 bible = "cli_bible.main:launch"
-bible-tui = "cli_bible.main:launch"
+cli-bible = "cli_bible.main:launch"
