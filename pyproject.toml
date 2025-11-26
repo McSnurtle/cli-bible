@@ -1,0 +1,32 @@
+[project]
+name = "cli-bible"
+version = "0.0.1"
+authors = [
+	{ name = "Mc_Snurtle" }
+]
+description = "Glory be to God forever and ever, amen. A pretty terminal user interface for viewing and interacting with God's word"
+dependencies = ["windows-curses ; sys_platform == 'win32'"]
+keywords = ["Bible", "CLI", "TUI", "Jesus-is-lord", "python"]
+readme = { file = "README.md", content-type = "text/markdown" }
+license = "CC0-1.0"
+license-files = "LICENSE"
+requires-python = ">=3.5"
+
+[project.urls]
+Repository = "https://github.com/McSnurtle/bible-tui"
+Issues = "https://github.com/McSnurtle/bible-tui"
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setup.packages.find]
+where = ["src"]
+
+[project.scripts]
+bible = "cli_bible.main:launch"
+bible-tui = "cli_bible.main:launch"
