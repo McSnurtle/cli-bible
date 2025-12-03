@@ -29,7 +29,8 @@ def get(url: str, params: Optional[dict] = None) -> requests.Response:
         if not notified:
             curses.beep()
             notified = True
-        delay = min(delay * 2, 30)  # exponential backoff with a max limit of the 30 seconds if somehow you requested 15 chapters in under 1 second
+        delay = min(delay * 2,
+                    30)  # exponential backoff with a max limit of the 30 seconds if somehow you requested 15 chapters in under 1 second
         time.sleep(delay)
 
 
@@ -63,7 +64,6 @@ def _book_aliases(translation: str) -> tuple[int, dict[str, str]]:
 def get_canonical_of_book(translation: str, book: str) -> str:
     code, aliases = _book_aliases(translation)
     book = book.lower()
-    print(f"BOOK: {book}\n\nALIASES: {aliases}")
     if book not in aliases:
         raise KeyError(f"No book {book} in {translation} translation.")
     return aliases[book]
@@ -158,7 +158,10 @@ def get_raw(translation: str, raw: str) -> tuple[int, dict]:
 
 
 def chapter_to_lines(data: list[dict], include_numbers: bool = True) -> list[str]:
-    return [verse_to_string(verse, include_numbers) for verse in data]
+    lines = [f"{data[0]['book_name']} {data[0]['chapter']}:"]
+    for verse in data:
+        lines.append(verse_to_string(verse, include_numbers))
+    return lines
 
 
 def verse_to_string(data: dict, include_number: bool = True) -> str:
