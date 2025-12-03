@@ -1,1 +1,2 @@
+requests~=2.32.5
 windows-curses; sys_platform == 'win32'
