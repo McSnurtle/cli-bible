@@ -4,6 +4,8 @@
 import curses
 import sys
 
+from typing import Callable
+
 from utils.config import get_config, set_config
 from utils.getter import get_chapter, chapter_to_lines, get_raw, get_random_verse, verse_to_string, \
     get_book, get_next_chapter
@@ -21,6 +23,16 @@ class Main(Screen):
         super().__init__(stdscr)
 
         height, width = self.stdscr.getmaxyx()
+        self.binds: dict[int, Callable] = {
+            ord("q"): stop,
+            ord("f"): self.find_prompt,
+            ord("n"): self.next_chapter,
+            ord("p"): self.prev_chapter,
+            ord("h"): self.prev_chapter,
+            ord("l"): self.next_chapter,
+            9: self.focus_next,
+            curses.KEY_RESIZE: self.update  # PLACEHOLDER FOR LIVE RESIZING METHOD
+        }
         tips: list[str] = ["[Q]uit", "[F]ind", "[N]ext", "[P]revious"]
         tip_str = "     ".join(tips)
         self.frame = ScrollableFrame(stdscr, 0, 0, width, height - 3,
@@ -52,22 +64,8 @@ class Main(Screen):
             stop()
 
     def event_loop(self, key: int) -> None:
-        # print(key)
-        if not key or key == -1:
-            pass
-        elif key == 9:
-            self.focus_next()
-            self.update()
-        elif key == ord("f"):
-            self.find_prompt()
-        elif key == ord("n"):
-            self._next_chapter(steps=1)
-        elif key == ord("p"):
-            self._next_chapter(steps=-1)
-        elif key == ord("q"):
-            stop()
-        elif key == curses.KEY_RESIZE:
-            self.update()
+        if key in self.binds:
+            self.binds[key]()
         elif len(self.widgets) > 0:
             self.widgets[self.current_widget].handle_event(key)
         self.update()
@@ -126,6 +124,12 @@ class Main(Screen):
             config["book"], config["chapter"] = book, int(chapter)
             self.frame.lines = chapter_to_lines(response["verses"])
             self.update()
+
+    def prev_chapter(self) -> None:
+        self._next_chapter(1)
+
+    def next_chapter(self) -> None:
+        self._next_chapter(-1)
 
 
 def stop(code: int = 0) -> None:

@@ -131,7 +131,7 @@ class ScrollableFrame(Widget):
     offset: int
     lines: list[str] = []
     widget_type = "ScrollableFrame"
-    binds = [curses.KEY_UP, curses.KEY_DOWN, curses.KEY_PPAGE, curses.KEY_NPAGE]
+    binds = [curses.KEY_UP, curses.KEY_DOWN, curses.KEY_PPAGE, curses.KEY_NPAGE, ord("j"), ord("k")]
     width: int
     height: int
 
@@ -179,9 +179,9 @@ class ScrollableFrame(Widget):
         if not self.focused or event not in self.binds:
             return False
 
-        if event == curses.KEY_UP:
+        if event == curses.KEY_UP or event == ord("k"):
             self.scroll_up(1)
-        elif event == curses.KEY_DOWN:
+        elif event == curses.KEY_DOWN or event == ord("j"):
             self.scroll_down(1)
         elif event == curses.KEY_PPAGE:  # pg up
             self.scroll_up(self.height - 2)
@@ -196,7 +196,7 @@ class ScrollableFrame(Widget):
             self.update()
 
     def scroll_down(self, lines: int) -> None:
-        if len(self.lines) * 2 > self.height - 2:   # if the lines even exceed the page...
+        if len(self.lines) * 2 > self.height - 2:  # if the lines even exceed the page...
             self.offset = max(self.offset - lines, -len(self.lines) * 2 + self.height)
             self.update()
 
@@ -273,4 +273,5 @@ class Screen:
                 self.current_widget = index
             else:
                 raise IndexError(f"{index} is outside of bounds of registered widgets.")
+        self.update()
         return self.widgets[self.current_widget].focus()
