@@ -122,12 +122,15 @@ class Main(Screen):
         code, response = get_next_chapter(translation=config["translation"], book=config["book"],
                                           chapter=config["chapter"], steps=steps)
         if code == 200:
+            book, chapter = response["reference"].split(" ")
+            config["book"], config["chapter"] = book, int(chapter)
             self.frame.lines = chapter_to_lines(response["verses"])
             self.update()
 
 
 def stop(code: int = 0) -> None:
     if code != 0: curses.beep()
+    set_config(config)
     sys.exit(code)
 
 
