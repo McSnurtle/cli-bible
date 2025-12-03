@@ -5,9 +5,9 @@ import curses
 import sys
 
 from utils.config import get_config, set_config
-from utils.getter import get_chapter, chapter_to_lines, available_bibles, get_raw, get_random_verse, verse_to_string, \
+from utils.getter import get_chapter, chapter_to_lines, get_raw, get_random_verse, verse_to_string, \
     get_book, get_next_chapter
-from widgets import (Screen, ScrollableFrame, Entry, HORIZONTAL, VERTICAL)
+from widgets import (Screen, ScrollableFrame, Entry)
 
 # ===== Variables =====
 RUNNING: bool = True
