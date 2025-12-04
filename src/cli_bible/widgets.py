@@ -142,10 +142,6 @@ class ScrollableFrame(Widget):
         self.wrapper = textwrap.TextWrapper(width=self.width - 2)
         self.lines = lines
 
-        # self.lines = []
-        # for line in lines:
-        #     for f_line in self.wrapper.wrap(line):
-        #         self.lines.append(f_line)
         self.offset = 1
         self._window = curses.newwin(height, width)
         # TODO: make this ^^^ a `curses.newpad()` instead, see: https://docs.python.org/3/library/curses.html#curses.newpad
@@ -189,15 +185,29 @@ class ScrollableFrame(Widget):
             self.scroll_down(self.height - 2)
         return True
 
-    # TODO: make these have a limit, so that at least one line is always visible
+    @property
+    def f_lines(self) -> list[str]:
+        lines: list[str] = []
+        for line in self.lines:
+            for f_line in self.wrapper.wrap(line):
+                lines.append(f_line)
+        return lines
+
+    @property
+    def content_length(self) -> int:
+        lines_from_wraps: int = len(self.f_lines) - len(self.lines)
+        print("EXTRA:", lines_from_wraps)
+        return len(self.lines) * 2 + lines_from_wraps
+
     def scroll_up(self, lines: int) -> None:
-        if len(self.lines) * 2 > self.height - 2:
+        if self.content_length > self.height - 2:
             self.offset = min(self.offset + lines, 1)
             self.update()
 
     def scroll_down(self, lines: int) -> None:
+        print("\n\n\nTOILET\n\n\n", self.content_length)
         if len(self.lines) * 2 > self.height - 2:  # if the lines even exceed the page...
-            self.offset = max(self.offset - lines, -len(self.lines) * 2 + self.height)
+            self.offset = max(self.offset - lines, -self.content_length + self.height)
             self.update()
 
 
