@@ -126,10 +126,10 @@ class Main(Screen):
             self.update()
 
     def prev_chapter(self) -> None:
-        self._next_chapter(1)
+        self._next_chapter(-1)
 
     def next_chapter(self) -> None:
-        self._next_chapter(-1)
+        self._next_chapter(1)
 
 
 def stop(code: int = 0) -> None:
