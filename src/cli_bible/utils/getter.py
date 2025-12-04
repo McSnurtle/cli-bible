@@ -63,7 +63,7 @@ def _book_aliases(translation: str) -> tuple[int, dict[str, str]]:
 
 def get_canonical_of_book(translation: str, book: str) -> str:
     code, aliases = _book_aliases(translation)
-    book = book.lower()
+    book = book.lower() if not book.lower() == "psalm" else "psalms"
     if book not in aliases:
         raise KeyError(f"No book {book} in {translation} translation.")
     return aliases[book]
