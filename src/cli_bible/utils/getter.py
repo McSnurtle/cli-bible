@@ -127,14 +127,14 @@ def get_next_chapter(translation: str, book: str, chapter: int, steps: int) -> t
     chapter += steps
     book_ids = _book_ids(translation)
     book = get_canonical_of_book(translation, book)
-    code, response = get_chapter(translation=translation, book=book, chapter=chapter)
+    code, response = get_raw(translation=translation, raw=f"{book} {chapter}")
     if code == 200:
         return code, response
 
     try:
         new_book = book_ids[book_ids.index(book) + steps]
         new_chapter = 1 if steps > 0 else get_final_chapter_id(translation, new_book)
-        return get_chapter(translation=translation, book=new_book, chapter=new_chapter)
+        return get_raw(translation=translation, raw=f"{book} {chapter}")
     except (ValueError, IndexError):
         return 404, {}  # no more books!
 
